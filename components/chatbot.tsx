@@ -67,10 +67,10 @@ export default function Chatbot() {
       }
 
       const data = await response.json()
-      
+
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: data.message,
+        content: data.message, // ✅ fixed key
         role: "assistant",
         timestamp: new Date(),
       }
@@ -92,18 +92,16 @@ export default function Chatbot() {
 
   return (
     <div className="fixed bottom-4 right-4 z-50 sm:bottom-4 sm:right-4">
-      {/* Chat Toggle Button */}
       {!isOpen && (
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        size="lg"
-        className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 transition-all duration-200"
-      >
-        <MessageCircle className="h-6 w-6" />
-      </Button>
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          size="lg"
+          className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary/90 transition-all duration-200"
+        >
+          <MessageCircle className="h-6 w-6" />
+        </Button>
       )}
 
-      {/* Chat Window */}
       {isOpen && (
         <Card className="absolute bottom-16 right-0 w-[calc(100vw-2rem)] sm:w-80 md:w-96 h-96 sm:h-[500px] shadow-2xl border-0 bg-background/95 backdrop-blur-sm max-w-sm sm:max-w-none animate-in slide-in-from-bottom-4 duration-300">
           <CardHeader className="pb-3 border-b">
@@ -122,9 +120,8 @@ export default function Chatbot() {
               </Button>
             </div>
           </CardHeader>
-          
+
           <CardContent className="p-0 h-full flex flex-col">
-            {/* Messages Area */}
             <ScrollArea className="flex-1 px-4 py-4">
               <div className="space-y-4">
                 {messages.map((message) => (
@@ -186,7 +183,6 @@ export default function Chatbot() {
               </div>
             </ScrollArea>
 
-            {/* Input Area */}
             <form onSubmit={handleSubmit} className="p-4 border-t bg-background/50">
               <div className="flex gap-3">
                 <Input
@@ -212,4 +208,4 @@ export default function Chatbot() {
       )}
     </div>
   )
-} 
+}
