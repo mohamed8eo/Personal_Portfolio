@@ -54,10 +54,11 @@ export default function ProjectPage() {
         setLoading(true)
         
         // Fetch repository data
-        const response = await fetch(`https://api.github.com/repos/mohamed8eo/${slug}`)
+        const response = await fetch(`/api/github?endpoint=/repos/mohamed8eo/${slug}`)
         
         if (!response.ok) {
-          throw new Error(`Repository not found: ${response.status}`)
+          const errorData = await response.json()
+          throw new Error(errorData.error || `Repository not found: ${response.status}`)
         }
         
         const data = await response.json()
@@ -65,7 +66,7 @@ export default function ProjectPage() {
         
         // Fetch repository contents to find images
         try {
-          const contentsResponse = await fetch(`https://api.github.com/repos/mohamed8eo/${slug}/contents`)
+          const contentsResponse = await fetch(`/api/github?endpoint=/repos/mohamed8eo/${slug}/contents`)
           
           if (contentsResponse.ok) {
             const contents: GitHubContent[] = await contentsResponse.json()

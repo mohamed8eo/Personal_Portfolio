@@ -48,21 +48,12 @@ export default function Projects() {
       try {
         setLoading(true)
         
-        // Add delay to avoid rate limiting
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        const response = await fetch('https://api.github.com/users/mohamed8eo/repos', {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'developer-portfolio'
-          }
-        })
+        // Use our API route instead of direct GitHub API calls
+        const response = await fetch('/api/github?endpoint=/users/mohamed8eo/repos')
         
         if (!response.ok) {
-          if (response.status === 403) {
-            throw new Error('GitHub API rate limit exceeded. Please try again later.')
-          }
-          throw new Error(`HTTP error! status: ${response.status}`)
+          const errorData = await response.json()
+          throw new Error(errorData.error || `HTTP error! status: ${response.status}`)
         }
         
         const data = await response.json()
@@ -82,12 +73,7 @@ export default function Projects() {
             // Add delay between requests to avoid rate limiting
             await new Promise(resolve => setTimeout(resolve, index * 200))
             
-            const contentsResponse = await fetch(`https://api.github.com/repos/mohamed8eo/${repo.name}/contents`, {
-              headers: {
-                'Accept': 'application/vnd.github.v3+json',
-                'User-Agent': 'developer-portfolio'
-              }
-            })
+            const contentsResponse = await fetch(`/api/github?endpoint=/repos/mohamed8eo/${repo.name}/contents`)
             
             if (contentsResponse.ok) {
               const contents: GitHubContent[] = await contentsResponse.json()
